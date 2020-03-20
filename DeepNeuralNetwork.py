@@ -70,9 +70,6 @@ def linear_activation_forward(A_prev, W, b, activation):
     cache = (linear_cache, activation_cache)
     return A, cache
 
-# GRADED FUNCTION: L_model_forward
-
-
 def L_model_forward(X, parameters):
     caches = []
     A = X
@@ -169,16 +166,19 @@ def linear_activation_backward(dA, cache, activation):
     linear_cache, activation_cache = cache
     if activation == "relu":
         #dZ=np.random.randn(linear_cache[0].shape)
-        dZ=[]
-        for i in range(linear_cache[0].shape[0]):
-            for j in range(linear_cache[0].shape[1]):
-                if linear_cache[0][i][j]<=0:
-                    dZ[i][j]=0
+        dz=[]
+        for i in range(activation_cache.shape[0]):
+            for j in range(activation_cache.shape[1]):
+                if activation_cache[i][j]<=0:
+                    dz+=[0]
                 else :
-                    dZ[i][j]=linear_cache[0][i][j]
+                    dz+=[activation_cache[i][j]]
+        dZ=np.array(dz)
+        dZ=np.reshape(dZ,activation_cache.shape)
         dA_prev, dW, db = linear_backward(dZ, linear_cache)
     elif activation == "sigmoid":
-        dZ = linear_cache[0]-Y
+        A=sigmoid(activation_cache)
+        dZ = dA*(A)*(1-A)
         dA_prev, dW, db = linear_backward(dZ, linear_cache)
     return dA_prev, dW, db
 
@@ -202,10 +202,10 @@ def L_model_backward(AL, Y, caches):
 # arguments for this function are a dictionary which contains parameters, dictionary containing gradient values and learning_rate of the model
 # this function returns the updated parameters after gradient descent 
 def update_parameters(parameters,grads,learning_rate):
-    L=len(parameters)
+    L=len(parameters) //2
     for l in range(L):
         parameters["W" + str(l+1)] = parameters["W" + str(l+1)]-learning_rate*grads["dW" + str(l+1)]
         parameters["b" + str(l+1)] = parameters["b" + str(l+1)]-learning_rate*grads["db" + str(l+1)]
     return parameters
         
-
+ 

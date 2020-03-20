@@ -209,3 +209,25 @@ def update_parameters(parameters,grads,learning_rate):
     return parameters
         
  
+# the arguments are 
+# X- a numpy array consistin of the features
+# Y- the outputs of the given dataset X
+# layer_dims- it a list of dimension in each layer
+# epochs- number of iterations to be performed 
+def model(X,Y,layer_dims,epochs):
+    parameters = initialize_parameters(layer_dims)
+    for p in range(0, epochs):
+        AL, outputs = L_model_forward(X, parameters)
+        print("Cost after", p+1, "th iteration:", compute_cost(AL, Y))
+        grads = L_model_backward(AL, Y, outputs)
+        parameters = update_parameters(parameters, grads, 0.01)
+    return parameters
+
+def predict(X,parameters):
+    L = len(parameters) // 2
+    AL, outputs = L_model_forward(X, parameters)
+    return AL
+
+
+
+

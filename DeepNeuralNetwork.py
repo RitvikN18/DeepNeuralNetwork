@@ -21,37 +21,6 @@ def initialize_parameters(layer_dims):
 
 # this function executes forward propagation and returns the output for of all layers for current parameters
 # this function takes the arguments as input features, parameters and a list of activation functions for each layer
-'''
-def forward_propagation(X, parameters, activation):
-    outputs=[]   # format=[[A[0],W[0],b[0]],[A[1],W[1],b[1]],...]
-    A=X
-    L=len(activation)  # number of layers in the network
-    for l in range(1,L):
-        A_prev=A
-        if(activation[l-1]=='relu'):
-            Z=np.dot(parameters['W'+str(l)],A_prev) + parameters['b'+str(l)]
-            A=relu(Z)
-            outputs+=[A,parameters['W'+str(l)]],parameters['b'+str(l)]
-        elif(activation[l-1]=='sigmoid'):
-            Z=np.dot(parameters['W'+str(l)],A_prev) + parameters['b'+str(l)]
-            A=sigmoid(Z)
-            outputs+=[A,parameters['W'+str(l)]],parameters['b'+str(l)]
-        elif(activation[l-1]=='linear'):
-            Z=np.dot(parameters['W'+str(l)],A_prev) + parameters['b'+str(l)]
-            A=Z
-            outputs+=[A,parameters['W'+str(l)]],parameters['b'+str(l)]
-    Z=np.dot(parameters['W'+str(L)],A) + parameters['b' + str(L)]
-    if activation[L-1]=='relu':
-        AL=relu(Z)
-    elif activation[L-1]=='sigmoid':
-        AL=sigmoid(Z)
-    else :
-        AL=Z
-    outputs+=[AL,parameters['W'+str(L)]],parameters['b'+str(L)]
-    return AL,outputs
-'''
-
-
 def linear_forward(A, W, b):
     Z = np.dot(W, A)+b
     cache = (A, W, b)
@@ -94,66 +63,6 @@ def compute_cost(AL,Y):
 
 # function to calculate backward propagation parameters 
 # return the derivative values in a dictionary
-'''def backward_propagation(AL,Y,outputs,activation):
-    grads={}       # a dictionary containing all the gradient values
-    L=len(outputs)
-    m=AL.shape[1]
-    Y.reshape(AL.shape)
-    dAL= -(np.divide(Y, AL) - np.divide(1 - Y, 1 - AL))
-    output=outputs[L-1]
-    if activation[L-1]=='sigmoid':
-        dZ=AL-Y
-        A_prev,W,b=output
-        dW = np.dot(dZ,A_prev.T)/m
-        db = np.sum(dZ,axis=1,keepdims=True)/m
-        dA_prev = np.dot(W.T,dZ)
-    elif activation[L-1]=='relu':
-        if output[0]<=0:
-            dZ=0
-        else:
-            dZ=output[0]
-        A_prev,W,b=output
-        dW = np.dot(dZ,A_prev.T)/m
-        db = np.sum(dZ,axis=1,keepdims=True)/m
-        dA_prev = np.dot(W.T,dZ)
-    else :
-        dZ=(AL-Y)/(AL*(1-AL))
-        A_prev, W, b = output
-        dW = np.dot(dZ, A_prev.T)/m
-        db = np.sum(dZ, axis=1, keepdims=True)/m
-        dA_prev = np.dot(W.T, dZ)
-    grads["dA" + str(L-1)], grads["dW" + str(L)], grads["db" + str(L)] = dA_prev,dW,db
-    dA_prev_temp=dA_prev
-    for l in reversed(range(L-1)):
-        output=outputs[l]
-        if activation[l]=='sigmoid':
-            dZ=output[0]-Y
-            A_prev,W,b=output
-            dW_temp = np.dot(dZ,A_prev.T)/m
-            db_temp = np.sum(dZ,axis=1,keepdims=True)/m
-            dA_prev_temp = np.dot(W.T,dZ)
-        elif activation[l]=='relu':
-            if output[0]<=0:
-                dZ=0
-            else:
-                dZ=output[0]
-            A_prev,W,b=output
-            dW_temp = np.dot(dZ,A_prev.T)/m
-            db_temp = np.sum(dZ,axis=1,keepdims=True)/m
-            dA_prev_temp = np.dot(W.T,dZ)
-        else :
-            dZ = (A-Y)/(A*(1-A))
-            A_prev, W, b = output
-            dW_temp = np.dot(dZ, A_prev.T)/m
-            db_temp = np.sum(dZ, axis=1, keepdims=True)/m
-            dA_prev_temp = np.dot(W.T, dZ)
-        grads["dA" + str(l)] = dA_prev_temp
-        grads["dW" + str(l + 1)] = dW_temp
-        grads["db" + str(l + 1)] = db_temp
-    return grads
-'''
-
-
 def linear_backward(dZ, cache):
     A_prev, W, b = cache
     m = A_prev.shape[1]
